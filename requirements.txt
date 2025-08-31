@@ -3,4 +3,4 @@ numpy>=2.3.2
 pandas>=2.3.2
 pyarrow>=21.0.0
 scikit-learn>=1.7.1
-selenium==4.35.0
+selenium>=4.35.0
