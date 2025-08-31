@@ -579,7 +579,7 @@ requires-dist = [
     { name = "pandas", specifier = ">=2.3.2" },
     { name = "pyarrow", specifier = ">=21.0.0" },
     { name = "scikit-learn", specifier = ">=1.7.1" },
-    { name = "selenium", specifier = ">=4.9.0" },
+    { name = "selenium", specifier = ">=4.35.0" },
 ]
 
 [[package]]

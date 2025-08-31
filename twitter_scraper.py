@@ -2,30 +2,22 @@ import re
 import time
 import logging
 import random
-import threading
 import os
 from datetime import datetime, timedelta
 from typing import List, Dict, Any, Set
-from queue import Queue
 
-import pandas as pd
-import numpy as np
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import NoSuchElementException, TimeoutException, WebDriverException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from sklearn.feature_extraction.text import TfidfVectorizer
-import matplotlib.pyplot as plt
 
 
 # =========================
 # Constants & Config
 # =========================
-HASHTAGS = ["#nifty50", "#sensex", "#intraday", "#banknifty"]
-MIN_TWEETS = 2000
 SEARCH_URL = "https://twitter.com/search?q={query}&src=typed_query&f=live"
 HEADERS_LIST = [
     # List of user agents to rotate for anti-bot
@@ -33,10 +25,6 @@ HEADERS_LIST = [
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.1 Safari/605.1.15",
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
 ]
-DATA_PATH = "tweets.parquet"
-MAX_THREADS = 8
-TWEETS_PER_HASHTAG = MIN_TWEETS // len(HASHTAGS)
-TIME_WINDOW_HOURS = 24
 
 # =========================
 # Twitter Login Credentials
@@ -121,6 +109,7 @@ class TwitterScraper:
     def __init__(self, hashtags: List[str], min_tweets: int, time_window_hours: int = 24):
         self.hashtags = hashtags
         self.min_tweets = min_tweets
+        self.tweets_per_hashtag = min_tweets // len(hashtags)
         self.time_window = timedelta(hours=time_window_hours)
         self.tweets: List[Dict[str, Any]] = []
         self.seen_ids: Set[str] = set()
@@ -162,7 +151,7 @@ class TwitterScraper:
             url = SEARCH_URL.format(query=hashtag.replace("#", "%23") + "%20lang%3Aen")
             driver.get(url)
             time.sleep(random.uniform(3, 6))
-            while collected < TWEETS_PER_HASHTAG and attempts < max_attempts and scroll_attempts < 50:
+            while collected < self.tweets_per_hashtag and attempts < max_attempts and scroll_attempts < 50:
                 try:
                     articles = driver.find_elements(By.TAG_NAME, "article")
                     if not articles:
@@ -182,7 +171,7 @@ class TwitterScraper:
                             if tweet_id:
                                 self.seen_ids.add(tweet_id)
                             collected += 1
-                            if collected >= TWEETS_PER_HASHTAG:
+                            if collected >= self.tweets_per_hashtag:
                                 break
                         except Exception as e:
                             logging.debug(f"Error parsing tweet: {e}")

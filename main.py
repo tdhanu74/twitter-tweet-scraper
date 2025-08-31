@@ -1,24 +1,10 @@
-import re
-import time
 import logging
-import random
-import threading
-import os
-from datetime import datetime, timedelta
 from typing import List, Dict, Any, Set
-from queue import Queue
 
 from twitter_scraper import TwitterScraper
 
 import pandas as pd
 import numpy as np
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.options import Options as ChromeOptions
-from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import NoSuchElementException, TimeoutException, WebDriverException
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from sklearn.feature_extraction.text import TfidfVectorizer
 import matplotlib.pyplot as plt
 
@@ -39,16 +25,7 @@ logging.basicConfig(
 # =========================
 HASHTAGS = ["#nifty50", "#sensex", "#intraday", "#banknifty"]
 MIN_TWEETS = 2000
-SEARCH_URL = "https://twitter.com/search?q={query}&src=typed_query&f=live"
-HEADERS_LIST = [
-    # List of user agents to rotate for anti-bot
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.1 Safari/605.1.15",
-    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
-]
 DATA_PATH = "tweets.parquet"
-MAX_THREADS = 1
-TWEETS_PER_HASHTAG = MIN_TWEETS // len(HASHTAGS)
 TIME_WINDOW_HOURS = 24
 
 # =========================
