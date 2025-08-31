@@ -6,8 +6,6 @@ dist/
 wheels/
 *.egg-info
 scraper.log
-tweets.parquet
-signals.npy
 
 # Virtual environments
 .venv
