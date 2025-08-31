@@ -21,6 +21,7 @@ This project scrapes tweets for Indian stock market hashtags (e.g., #nifty50, #s
 - The following Python packages:
   - selenium
   - pandas
+  - pyarrow
   - numpy
   - scikit-learn
   - matplotlib
