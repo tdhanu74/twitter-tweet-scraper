@@ -2,10 +2,11 @@
 
 This project scrapes tweets for Indian stock market hashtags (e.g., #nifty50, #sensex, #intraday, #banknifty) from Twitter, processes and deduplicates the data, and converts tweet text into numerical signals for downstream analysis or trading models.
 
-## Features
+## Approach and Features
 
-- Multi-threaded scraping using Selenium WebDriver
+- Scraping using Headless Selenium WebDriver to search different hashtags and scroll through all the posts for those hashtag and extract their data
 - Rotates user agents for anti-bot evasion
+- Delays scrolling with random intervals for anti-bot evasion and not hitting the Rate limit for the page
 - Cleans, deduplicates, and stores tweets in Parquet format
 - Extracts hashtags, mentions, and engagement metrics
 - Converts tweet text to TF-IDF signals
